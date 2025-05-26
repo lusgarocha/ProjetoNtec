@@ -1,0 +1,517 @@
+// ================ FUNÇÕES DE FILTRO DE MÁQUINAS ================
+function filterMachines(filter) {
+    const allIcons = document.querySelectorAll('.machine-icon');
+
+    allIcons.forEach(icon => {
+        const parent = icon.closest('.flex.flex-col.items-center');
+
+        if (filter === 'Todas') {
+            parent.style.display = 'flex';
+            return;
+        }
+
+        if (filter === 'Produção' && !icon.classList.contains('bg-green-50')) {
+            parent.style.display = 'none';
+        } else if (filter === 'Produção') {
+            parent.style.display = 'flex';
+        }
+
+        if (filter === 'Paradas' && !icon.classList.contains('bg-red-50')) {
+            parent.style.display = 'none';
+        } else if (filter === 'Paradas') {
+            parent.style.display = 'flex';
+        }
+    });
+}
+
+// Event listeners para botões de filtro
+document.querySelectorAll('button[class*="px-3 py-1"]').forEach(button => {
+    button.addEventListener('click', function() {
+        // Remove a seleção de todos os botões
+        document.querySelectorAll('button[class*="px-3 py-1"]').forEach(btn => {
+            btn.classList.remove('bg-blue-500', 'text-white');
+            btn.classList.add('bg-white', 'border', 'border-gray-300');
+        });
+
+        // Adiciona seleção ao botão clicado
+        this.classList.remove('bg-white', 'border', 'border-gray-300');
+        this.classList.add('bg-blue-500', 'text-white');
+
+        // Filtra as máquinas
+        const filter = this.textContent.trim();
+        filterMachines(filter);
+    });
+});
+
+// ================ ATUALIZAÇÃO DE PRODUÇÃO (CORRIGIDO) ================
+function updateProduction() {
+    document.querySelectorAll('.machine-icon.bg-green-50').forEach(icon => {
+        const tooltip = icon.querySelector('.tooltip');
+        const currentText = tooltip.textContent;
+
+        const producedMatch = currentText.match(/Produzidos: (\d+)/);
+        if (producedMatch) {
+            const currentProduced = parseInt(producedMatch[1]);
+            const increment = Math.floor(Math.random() * 5) + 1;
+            const newProduced = currentProduced + increment;
+
+            tooltip.innerHTML = tooltip.innerHTML.replace(
+                `Produzidos: ${currentProduced}`,
+                `Produzidos: ${newProduced}`
+            );
+
+            const producedDisplay = icon.closest('.flex.flex-col').querySelector('.text-xs.font-medium');
+            if (producedDisplay && !isNaN(parseInt(producedDisplay.textContent))) {
+                producedDisplay.textContent = `${Math.round(newProduced / 10)}%`;
+            }
+        }
+    });
+}
+
+
+// ================ MENU DE NOTIFICAÇÕES ================
+const notificationButton = document.getElementById('notificationButton');
+const notificationDropdown = document.getElementById('notificationDropdown');
+
+// Alternar menu de notificações
+if (notificationButton && notificationDropdown) {
+    notificationButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isHidden = notificationDropdown.classList.contains('hidden');
+
+        // Fecha outros menus abertos
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            if (menu !== notificationDropdown) menu.classList.add('hidden');
+        });
+
+        // Alterna o menu de notificações
+        notificationDropdown.classList.toggle('hidden');
+
+        // Remove a badge de notificação quando aberto
+        if (isHidden) {
+            const badge = document.querySelector('.notification-badge');
+            if (badge) badge.classList.add('hidden');
+        }
+    });
+}
+
+// ================ MENU DE USUÁRIO ================
+const userMenuButton = document.getElementById('userMenuButton');
+const userMenuDropdown = document.getElementById('userMenuDropdown');
+const userMenuChevron = document.getElementById('userMenuChevron');
+const logoutButton = document.getElementById('logoutButton');
+const redefinirSenha = document.getElementById('Redefinirsenha');
+
+// Alternar menu dropdown
+if (userMenuButton && userMenuDropdown) {
+    userMenuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isHidden = userMenuDropdown.classList.contains('hidden');
+
+        // Fecha todos os outros menus abertos primeiro
+        document.querySelectorAll('.dropdown-menu, .user-menu').forEach(menu => {
+            if (menu !== userMenuDropdown) menu.classList.add('hidden');
+        });
+
+        // Alterna o menu atual
+        userMenuDropdown.classList.toggle('hidden');
+
+        // Animação do ícone
+        if (userMenuChevron) {
+            if (isHidden) {
+                userMenuChevron.classList.add('transform', 'rotate-180');
+            } else {
+                userMenuChevron.classList.remove('transform', 'rotate-180');
+            }
+        }
+    });
+}
+
+// Ação de logout
+if (logoutButton) {
+    logoutButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('Deseja realmente sair do sistema?')) {
+            alert('Logout realizado com sucesso!');
+            window.location.href = 'http://192.168.1.96/PROJETO%20NTEC/HTML/login.html';
+        }
+    });
+}
+
+// Ação de redefinir senha
+if (redefinirSenha) {
+    redefinirSenha.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'https://google.com';
+    });
+}
+
+// ================ ACESSIBILIDADE ================
+const accessibilityBtn = document.getElementById('accessibilityBtn');
+const accessibilityPanel = document.getElementById('accessibilityPanel');
+const darkModeToggle = document.getElementById('darkModeToggle');
+const fontSizeToggle = document.getElementById('fontSizeToggle');
+const contrastToggle = document.getElementById('contrastToggle');
+
+// Verificar preferências salvas
+function checkSavedPreferences() {
+    // Verificar primeiro o alto contraste (tem prioridade)
+    if (localStorage.getItem('highContrast') === 'true') {
+        if (contrastToggle) contrastToggle.checked = true;
+        document.body.classList.add('high-contrast');
+        document.body.style.backgroundColor = '#000';
+        document.body.style.color = '#fff';
+        // Desativa visualmente o toggle do modo escuro
+        if (darkModeToggle) darkModeToggle.checked = false;
+    } else {
+        // Dark mode - só aplica se o alto contraste não estiver ativo
+        if (localStorage.getItem('darkMode') === 'true') {
+            if (darkModeToggle) darkModeToggle.checked = true;
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // Font size
+    if (localStorage.getItem('largeFont') === 'true') {
+        if (fontSizeToggle) fontSizeToggle.checked = true;
+        document.body.style.fontSize = '18px';
+    } else {
+        document.body.style.fontSize = '';
+    }
+}
+
+// Toggle panel visibility
+if (accessibilityBtn && accessibilityPanel) {
+    accessibilityBtn.addEventListener('click', function() {
+        accessibilityPanel.classList.toggle('show');
+    });
+}
+
+// Dark mode toggle - independente do alto contraste
+if (darkModeToggle) {
+    darkModeToggle.addEventListener('change', function() {
+        // Se o alto contraste estiver ativo, não faz nada no modo escuro
+        if (!(contrastToggle && contrastToggle.checked)) {
+            document.body.classList.toggle('dark-mode', this.checked);
+            localStorage.setItem('darkMode', this.checked);
+        } else {
+            // Mantém o estado atual se o alto contraste estiver ativo
+            this.checked = false;
+        }
+    });
+}
+
+// High contrast toggle - agora independente do modo escuro
+if (contrastToggle) {
+    contrastToggle.addEventListener('change', function() {
+        if (this.checked) {
+            // Ativa alto contraste (sobrescreve o modo escuro se estiver ativo)
+            document.body.classList.add('high-contrast');
+            document.body.style.backgroundColor = '#000';
+            document.body.style.color = '#fff';
+            // Desativa visualmente o dark mode
+            if (darkModeToggle) darkModeToggle.checked = false;
+        } else {
+            // Desativa alto contraste e restaura o modo escuro se estiver ativado
+            document.body.classList.remove('high-contrast');
+            document.body.style.backgroundColor = '';
+            document.body.style.color = '';
+            
+            // Restaura o modo escuro se estiver ativado nas preferências
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                if (darkModeToggle) darkModeToggle.checked = true;
+            }
+        }
+        localStorage.setItem('highContrast', this.checked);
+    });
+}
+
+// Font size toggle
+if (fontSizeToggle) {
+    fontSizeToggle.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.style.fontSize = '18px';
+        } else {
+            document.body.style.fontSize = '';
+        }
+        localStorage.setItem('largeFont', this.checked);
+    });
+}
+
+// Fechar menus ao clicar fora
+document.addEventListener('click', function(e) {
+    if (notificationButton && notificationDropdown && 
+        !notificationButton.contains(e.target) && !notificationDropdown.contains(e.target)) {
+        notificationDropdown.classList.add('hidden');
+    }
+    
+    if (userMenuButton && userMenuDropdown && 
+        !userMenuButton.contains(e.target) && !userMenuDropdown.contains(e.target)) {
+        userMenuDropdown.classList.add('hidden');
+        if (userMenuChevron) {
+            userMenuChevron.classList.remove('transform', 'rotate-180');
+        }
+    }
+    
+    if (accessibilityBtn && accessibilityPanel && 
+        !accessibilityBtn.contains(e.target) && !accessibilityPanel.contains(e.target)) {
+        accessibilityPanel.classList.remove('show');
+    }
+});
+
+// ================ ANIMAÇÕES E INTERAÇÕES ================
+document.querySelectorAll('.module-card').forEach(card => {
+    card.addEventListener('click', function() {
+        this.style.transform = 'translateY(-2px)';
+        setTimeout(() => {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+            const title = this.querySelector('h3');
+            if (title) alert(`Módulo "${title.textContent}" selecionado!`);
+        }, 200);
+    });
+});
+
+// ================ FUNÇÕES DE DATA E SAUDAÇÃO ================
+function atualizarSaudacao() {
+    const hora = new Date().getHours();
+    const saudacaoElement = document.getElementById('saudacao');
+
+    if (saudacaoElement) {
+        if (hora >= 5 && hora < 12) {
+            saudacaoElement.textContent = "Bom dia!";
+        } else if (hora >= 12 && hora < 18) {
+            saudacaoElement.textContent = "Boa tarde!";
+        } else {
+            saudacaoElement.textContent = "Boa noite!";
+        }
+    }
+}
+
+function displayCurrentDate() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateString = now.toLocaleDateString('pt-BR', options);
+    console.log('Hoje é ' + dateString);
+}
+
+// ================ GRÁFICO DE FATURAMENTO POR PRODUTO (CORRIGIDO) ================
+function initializeSalesChart() {
+    const salesChartCtx = document.getElementById('salesChart')?.getContext('2d');
+    if (!salesChartCtx) return;
+
+    const salesData = {
+        2024: [
+            {
+                month: new Date().getMonth(),
+                products: [
+                    { name: "CONJ CHASSI FRONT 32\"", revenue: 12500 },
+                    { name: "CONJ CHASSI FRONT 55\"", revenue: 18700 },
+                    { name: "CONJ CHASSI FRONT 60\"", revenue: 21500 },
+                    { name: "CHASSI TRASEIRO", revenue: 9800 },
+                    { name: "SUPORTE TV 32\"", revenue: 6500 },
+                    { name: "SUPORTE TV 55\"", revenue: 4200 },
+                    { name: "BASE TV 60\"", revenue: 11500 },
+                    { name: "TAMPA TRASEIRA 32\"", revenue: 14300 },
+                    { name: "TAMPA TRASEIRA 55\"", revenue: 8700 },
+                    { name: "TAMPA TRASEIRA 60\"", revenue: 3200 }
+                ]
+            }
+        ]
+    };
+
+    function sortProductsByRevenue(products) {
+        return [...products].sort((a, b) => b.revenue - a.revenue);
+    }
+
+    const currentMonthData = salesData[2024].find(m => m.month === new Date().getMonth()) || salesData[2024][0];
+    const sortedProducts = sortProductsByRevenue(currentMonthData.products);
+
+    new Chart(salesChartCtx, {
+        type: 'bar',
+        data: {
+            labels: sortedProducts.map(p => p.name),
+            datasets: [{
+                label: 'Faturamento',
+                data: sortedProducts.map(p => p.revenue),
+                backgroundColor: '#3B82F6',
+                borderRadius: 4,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `R$ ${context.raw.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+                        }
+                    },
+                    backgroundColor: '#1F2937',
+                    titleColor: '#F9FAFB',
+                    bodyColor: '#F9FAFB',
+                    borderColor: '#374151',
+                    borderWidth: 1,
+                    padding: 12
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: { color: '#E5E7EB', drawBorder: false },
+                    ticks: {
+                        color: '#6B7280',
+                        callback: function(value) {
+                            return 'R$ ' + value.toLocaleString('pt-BR');
+                        }
+                    }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: {
+                        color: '#6B7280',
+                        font: { weight: 'bold' }
+                    }
+                }
+            },
+            animation: { duration: 1000 }
+        }
+    });
+}
+// ================ INICIALIZAÇÃO ================
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar preferências de acessibilidade
+    checkSavedPreferences();
+    
+    // Configurar data e saudação
+    displayCurrentDate();
+    atualizarSaudacao();
+    
+    // Atualizar saudação a cada hora
+    setInterval(atualizarSaudacao, 3600000);
+    
+    // Iniciar atualização de produção
+    setInterval(updateProduction, 30000);
+    
+    // Inicializar gráfico de faturamento por produto
+    initializeSalesChart();
+    
+    // Configurar exportação PDF (se existir o botão)
+    const exportPdfBtn = document.getElementById('exportPdf');
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener('click', async function() {
+            console.log('Exportar PDF foi clicado');
+        });
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuração do gráfico de vendas diárias
+    const ctx = document.getElementById('graficoVendasModerno').getContext('2d');
+    
+    // Dados de exemplo (substitua por dados reais da sua aplicação)
+    const dadosVendas = [
+        { dia: 1, faturamento: 12500 },
+        { dia: 2, faturamento: 18900 },
+        { dia: 3, faturamento: 14200 },
+        { dia: 4, faturamento: 21000 },
+        { dia: 5, faturamento: 17500 },
+        { dia: 6, faturamento: 19800 },
+        { dia: 7, faturamento: 22300 },
+        { dia: 8, faturamento: 18700 },
+        { dia: 9, faturamento: 15400 },
+        { dia: 10, faturamento: 23100 },
+        { dia: 11, faturamento: 23100 },
+        { dia: 12, faturamento: 23100 },
+        { dia: 13, faturamento: 23100 },
+        { dia: 14, faturamento: 23100 },
+        { dia: 15, faturamento: 23100 },
+        { dia: 16, faturamento: 12500 },
+        { dia: 17, faturamento: 18900 },
+        { dia: 18, faturamento: 14200 },
+        { dia: 19, faturamento: 21000 },
+        { dia: 20, faturamento: 17500 },
+        { dia: 21, faturamento: 19800 },
+        { dia: 22, faturamento: 22300 },
+        { dia: 23, faturamento: 18700 },
+        { dia: 24, faturamento: 15400 },
+        { dia: 25, faturamento: 23100 },
+        { dia: 26, faturamento: 13100 },
+        { dia: 27, faturamento: 23100 },
+        { dia: 28, faturamento: 33100 },
+        { dia: 29, faturamento: 13100 },
+        { dia: 30, faturamento: 23100 },
+        { dia: 31, faturamento: 33100 },
+        // Adicione mais dias conforme necessário
+    ];
+    
+    // Verifique se o canvas existe
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dadosVendas.map(item => item.dia),
+                datasets: [{
+                    data: dadosVendas.map(item => item.faturamento),
+                    backgroundColor: 'rgba(101, 116, 255, 0.08)',
+                    borderColor: 'rgba(101, 116, 255, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: 'rgba(101, 116, 255, 1)',
+                    pointRadius: 0,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: '#1A1A1A',
+                        callbacks: {
+                            label: function(context) {
+                                return 'R$ ' + context.parsed.y.toLocaleString('pt-BR');
+                            },
+                            title: function(context) {
+                                return 'Dia ' + context[0].label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.03)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + (value / 1000).toFixed(0) + 'k';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        console.error('Elemento canvas não encontrado');
+    }
+});
