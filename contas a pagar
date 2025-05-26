@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+
+<head>
+    <!-- Metadados básicos -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo - Financeiro</title>
+
+    <!-- CSS Externo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="ContasaPagar.css">
+
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Painel de Acessibilidade -->
+    <div class="accessibility-gear">
+        <div class="accessibility-btn" id="accessibilityBtn">
+            <i class="fas fa-cog fa-lg text-gray-800 dark:text-white"></i>
+        </div>
+        <div class="accessibility-panel bg-white dark:bg-gray-800 shadow-lg" id="accessibilityPanel">
+            <h3 class="font-bold mb-3 text-gray-800 dark:text-white">Opções de Acessibilidade</h3>
+
+            <div class="accessibility-option">
+                <i class="fas fa-moon text-gray-800 dark:text-gray-200"></i>
+                <span class="text-gray-800 dark:text-gray-200">Modo Escuro</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="accessibility-option">
+                <i class="fas fa-text-height text-gray-800 dark:text-gray-200"></i>
+                <span class="text-gray-800 dark:text-gray-200">Aumentar Fonte</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="fontSizeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="accessibility-option">
+                <i class="fas fa-eye text-gray-800 dark:text-gray-200"></i>
+                <span class="text-gray-800 dark:text-gray-200">Alto Contraste</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="contrastToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho do Dashboard -->
+    <header class="dashboard-header bg-blue-800 dark:bg-gray-900 text-white shadow-lg">
+        <div class="container mx-auto px-1 py-6">
+            <div class="flex justify-between items-center">
+                <!-- Logo e Saudação -->
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.history.back()"
+                        class="p-2 rounded-full hover:bg-blue-700 dark:hover:bg-gray-700 transition" title="Voltar">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+
+                    <div class="p-2 rounded-lg select-none">
+                        <img src="NTEC_LOGO_.png" alt="NOVATEC Logo" class="h-16" draggable="false">
+                    </div>
+                    <div>
+                        <h1 class="text-4xl select-none">
+                            <span id="saudacao" class="dark:text-white">Bom dia!</span>
+                            <strong class="dark:text-white">Admin</strong>
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Notificações e Perfil -->
+                <div class="flex items-center space-x-6">
+                    <div class="relative">
+                        <button id="notificationButton"
+                            class="p-2 rounded-full hover:bg-blue-700 dark:hover:bg-gray-700 transition relative">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span
+                                class="notification-badge absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+
+                        <div id="notificationDropdown"
+                            class="hidden absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50">
+                            <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                <h3 class="text-sm font-semibold text-blue-900 dark:text-white">Atualizações do Site
+                                </h3>
+                            </div>
+                            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-blue-100 dark:bg-blue-900 p-2 rounded-full">
+                                            <i class="fas fa-sync-alt text-blue-600 dark:text-blue-300"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-blue-900 dark:text-white">Nova versão
+                                                disponível</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-300">Confira as últimas
+                                                atualizações do sistema</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-green-100 dark:bg-green-900 p-2 rounded-full">
+                                            <i class="fas fa-chart-line text-green-600 dark:text-green-300"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-blue-900 dark:text-white">Novos recursos
+                                            </p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-300">Dashboard de produção
+                                                aprimorado</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-purple-100 dark:bg-purple-900 p-2 rounded-full">
+                                            <i class="fas fa-bug text-purple-600 dark:text-purple-300"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-blue-900 dark:text-white">Correções de
+                                                bugs</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-300">Problemas resolvidos na
+                                                versão 2.1.3</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="px-4 py-2 border-t border-gray-200 dark:border-gray-700">
+                                <a href="#"
+                                    class="text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                                    Ver todas as atualizações
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <button id="userMenuButton" class="flex items-center space-x-2 focus:outline-none">
+                            <div
+                                class="h-10 w-10 rounded-full bg-blue-200 dark:bg-gray-700 flex items-center justify-center">
+                                <i class="fas fa-user text-blue-800 dark:text-blue-200"></i>
+                            </div>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-200 text-white dark:text-gray-200"
+                                id="userMenuChevron"></i>
+                        </button>
+
+                        <div id="userMenuDropdown"
+                            class="hidden absolute right-0 mt-2 w-48 bg-blue-900 dark:bg-gray-800 rounded-md shadow-lg py-1 z-50">
+                            <div class="px-4 py-2 text-sm text-white dark:text-gray-200 border-b dark:border-gray-700">
+                                Logado como <span class="font-semibold">Admin</span>
+                            </div>
+
+                            <a href="#" id="Redefinirsenha"
+                                class="block px-4 py-2 text-sm text-white dark:text-gray-200 hover:bg-blue-800 dark:hover:bg-gray-700">
+                                <i class="fas fa-lock mr-2"></i> Redefinir senha
+                            </a>
+                            <a href="#" id="logoutButton"
+                                class="block px-4 py-2 text-sm text-red-400 hover:bg-blue-800 dark:hover:bg-gray-700">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Sair
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+
+        <!-- Search Area -->
+        <div class="search-area bg-white dark: bg-red-500 shadow-sm">
+            <div class="search-filter">
+                <select class="filter-select dark:bg-gray-700 dark:text-white dark:border-gray-600">
+                    <option value="">Todos os anos</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+                <select class="filter-select dark:bg-gray-700 dark:text-white dark:border-gray-600">
+                    <option value="">Todos meses</option>
+                    <option value="1">Janeiro</option>
+                    <option value="2">Fevereiro</option>
+                    <option value="3">Março</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Maio</option>
+                    <option value="6">Junho</option>
+                    <option value="7">Julho</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="cards-grid">
+
+
+            <div class="card card-pending dark:bg-gray-800 dark:border-gray-700">
+                <div class="card-title">
+                    <i class="fas fa-money-bill-wave text-yellow-600 dark:text-yellow-400"></i>
+                    <span class="text-gray-600 dark:text-gray-300">Faturamento Atual</span>
+                </div>
+                <div class="card-value dark:text-white">R$5.625</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="dark:text-gray-300">3 contas este mês</span>
+                </div>
+            </div>
+
+            <div class="card card-overdue dark:bg-gray-800 dark:border-gray-700">
+                <div class="card-title">
+                    <i class="fas fa-file text-red-600 dark:text-red-400"></i>
+                    <span class="text-gray-600 dark:text-gray-300">Notas Emitidas</span>
+                </div>
+                <div class="card-value dark:text-white">589</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="dark:text-gray-300"> 20% vs mês passado</span>
+                </div>
+            </div>
+
+            <div class="card card-total dark:bg-gray-800 dark:border-gray-700">
+                <div class="card-title">
+                    <i class="fas fa-chart-simple text-blue-600 dark:text-blue-400"></i>
+                    <span class="text-gray-800 dark:text-white">Faturamento Acumulado</span>
+                </div>
+                <div class="card-value dark:text-white">R$168.500,90</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="dark:text-gray-300">5% vs mês passado</span>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="cards-grid">
+            <div class="card card-total dark:bg-gray-800 dark:border-gray-700">
+                <div class="card-title">
+                    <i class="fas fa-dollar text-blue-600 dark:text-blue-400"></i>
+                    <span class="text-gray-600 dark:text-gray-300">Faturamento Samsung</span>
+                </div>
+                <div class="card-value dark:text-white">R$1.626.750,65</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="dark:text-gray-300">5% vs mês passado</span>
+                </div>
+            </div>
+            <div class="card card-total dark:bg-gray-800 dark:border-gray-700">
+                <div class="card-title">
+                    <i class="fas fa-dollar text-blue-600 dark:text-blue-400"></i>
+                    <span class="text-gray-600 dark:text-gray-300">Faturamento Angstron</span>
+                </div>
+                <div class="card-value dark:text-white">R$245.226,64</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="dark:text-gray-300">5% vs mês passado</span>
+                </div>
+            </div>
+            <div class="card card-total dark:bg-gray-800 dark:border-gray-700">
+                <div class="card-title">
+                    <i class="fas fa-dollar text-blue-600 dark:text-blue-400"></i>
+                    <span class="text-gray-600 dark:text-gray-300">Faturamento Mondial</span>
+                </div>
+                <div class="card-value dark:text-white">R$724.106,03</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="dark:text-gray-300">5% vs mês passado</span>
+                </div>
+            </div>
+        </div>
+        <!-- Substitua a seção atual do gráfico por este código -->
+        <div class="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-6 mt-6">
+            <!-- Cabeçalho e Filtros -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Faturamento por Produto</h2>
+                    <p class="text-gray-600 dark:text-gray-300">Comparativo mensal de desempenho.</p>
+                </div>
+            </div>
+
+            <!-- Gráfico -->
+            <div class="chart-container bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <div class="bar-chart" style="height: 400px;">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Legenda -->
+            <div class="flex flex-wrap justify-center gap-4 mt-6">
+                <div class="flex items-center">
+                </div>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Evolução de vendas</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-8">Gráfico de evolução de vendas diário.</p>
+            </div>
+            <div class="grafico-vendas-moderno">
+
+                <canvas id="graficoVendasModerno"></canvas>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-900 dark:bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <img src="LOGO NOVATEC - BRANCO.png" class="h-12 m-2 select-none" draggable="false">
+                    <p class="text-gray-400 text-sm select-none">Moldamos <strong>o Presente</strong> para transformar
+                        <strong>o Futuro.</strong>
+                    </p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://www.facebook.com/profile.php?id=61562099961826"
+                        class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/101728135/admin/dashboard/"
+                        class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://www.instagram.com/novatec.manaus/"
+                        class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@novatecmanaus" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+            <div
+                class="border-t border-gray-800 mt-6 pt-6 text-sm text-gray-400 flex justify-between items-center select-none">
+                <p>Novatec Indústria de Plásticos 2025 © Todos os direitos reservados.</p>
+                <p class="text-gray-200 select-none"><strong>DTI</strong> - Departamento de Tecnologia da Informação</p>
+            </div>
+            <div class="mt-10 text-left text-gray-500 select-none">Version beta - v0.1</div>
+        </div>
+    </footer>
+
+    <!-- Script JavaScript -->
+    <script src="ContasaPagar.js    "></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</body>
+
+</html>
